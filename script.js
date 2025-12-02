@@ -100,35 +100,70 @@ levelSlider.addEventListener('input', ()=>{
 
 // Left button (clicker / tutorial)
 leftButton.addEventListener('click',()=>{
-  let randIntJackpot = Math.floor(Math.random()*100);
-  if(randIntJackpot===1 && coachingProgress>=5) {
-    jackpot.play();
-    titleJackpotLabel.textContent = '🍒🍒🍒 JACKPOT 🍒🍒🍒';
-  } else {
-    singleBell.play();
-    titleJackpotLabel.textContent = 'Dog Therapy';
-  }
 
-  if (isRunning) {
-
-    timeLeft = levelNumberArray[stepperValue-1];
-    updateTimerLabel();
-    timer = setInterval(fireTimer,1000);
+    // -------------------------
+    // TUTORIAL BEHAVIOR (unchanged)
+    // -------------------------
+    if (coachingProgress === 1) {
+        coachingProgress = 2;
+        instructionTitle.textContent = "🟠 Starts a Variable Timer";
+        coachingLabel.textContent =
+            "• This is how you train calm behavior\n\n" +
+            "• The length of each interval will vary\n\n" +
+            "• Have your dog go to their bed then start the timer\n";
+        goLabel.textContent = "Try it now. Press 🟠";
     }
 
-  
-  // Tutorial progression
-  if(coachingProgress===0) {
-    coachingProgress=1;
-    instructionTitle.textContent='🟢 Is Your Clicker';
-    coachingLabel.textContent='• If your dog does particularly well press it and give a treat \n\n• The bell lets them know exactly what they were doing to earn a treat';
-    goLabel.textContent='Try it now. Press 🟢';
-  } else if(coachingProgress===1){
-    coachingProgress=2;
-    instructionTitle.textContent='🟠 Starts a Variable Timer';
-    coachingLabel.textContent='• This is how you train calm behavior \n\n• The length of each interval will vary\n\n• Have your dog go to their bed then start the timer';
-    goLabel.textContent='Try it now. Press 🟠';
-  }
+    if (coachingProgress === 0) {
+        coachingProgress = 1;
+        instructionTitle.textContent = "🟢 Is Your Clicker";
+        coachingLabel.textContent =
+            "• If your dog does particularly well press it and give a treat\n\n" +
+            "• The bell lets them know exactly what they were doing to earn a treat\n";
+        goLabel.textContent = "Try it now. Press 🟢";
+    }
+
+    // -----------------------------------
+    // ALWAYS PLAY SOUND
+    // -----------------------------------
+    let randJackpot = Math.floor(Math.random() * 100);
+
+    if (randJackpot === 1 && coachingProgress >= 5) {
+        audioName = "Jackpot";
+        titleJackpotLabel.textContent = "🍒🍒🍒 JACKPOT 🍒🍒🍒";
+    } else {
+        audioName = "SingleBell";
+        titleJackpotLabel.textContent = "Dog Therapy";
+    }
+
+    playAudio(audioName);
+
+
+    // -----------------------------------------------------------
+    // NEW BEHAVIOR: RESET TIMER IF CURRENTLY RUNNING
+    // -----------------------------------------------------------
+    if (isRunning) {
+
+        // Generate a new variable multiplier
+        chanceMultiplier();
+
+        // Base interval for the current level
+        const baseInterval = levelNumberArray[stepperValue - 1];
+
+        // New interval
+        timeLeft = baseInterval * multiplier;
+
+        // Update displayed countdown
+        updateTimerLabel();
+
+        // Keep timer running
+        return;
+    }
+
+    // -----------------------------------------------------------
+    // ORIGINAL BEHAVIOR WHEN TIMER IS NOT RUNNING
+    // -----------------------------------------------------------
+    // (Just plays the sound)
 });
 
 // Right button (start/stop timer)
