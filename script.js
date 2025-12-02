@@ -111,20 +111,9 @@ leftButton.addEventListener('click',()=>{
 
   if (isRunning) {
 
-        // Generate a new multiplier like the original Swift code
-        chanceMultiplier();
-
-        // Get the base interval for this level
-        const baseInterval = levelNumberArray[stepperValue - 1];
-
-        // NEW interval = base * multiplier
-        timeLeft = baseInterval * multiplier;
-
-        // Force the next tick to immediately show the new time
-        updateTimerLabel();
-
-        // Do NOT stop the timer – keep it running
-        return;
+    timeLeft = levelNumberArray[stepperValue-1];
+    updateTimerLabel();
+    timer = setInterval(fireTimer,1000);
     }
 
   
