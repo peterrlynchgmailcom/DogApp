@@ -108,6 +108,26 @@ leftButton.addEventListener('click',()=>{
     singleBell.play();
     titleJackpotLabel.textContent = 'Dog Therapy';
   }
+
+  if (isRunning) {
+
+        // Generate a new multiplier like the original Swift code
+        chanceMultiplier();
+
+        // Get the base interval for this level
+        const baseInterval = levelNumberArray[stepperValue - 1];
+
+        // NEW interval = base * multiplier
+        timeLeft = baseInterval * multiplier;
+
+        // Force the next tick to immediately show the new time
+        updateTimerLabel();
+
+        // Do NOT stop the timer – keep it running
+        return;
+    }
+
+  
   // Tutorial progression
   if(coachingProgress===0) {
     coachingProgress=1;
